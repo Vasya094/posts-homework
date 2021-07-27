@@ -1,54 +1,128 @@
 <template>
-  <div class="hero">
-    <div class="hero-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 298">
-        <g fill="none" fill-rule="nonzero">
-          <path fill="#00C58E" d="M227.92099 82.07407l-13.6889 23.7037-46.8148-81.08641L23.7037 273.58025h97.3037c0 13.0912 10.61252 23.7037 23.70371 23.7037H23.70371c-8.46771 0-16.29145-4.52017-20.5246-11.85382-4.23315-7.33366-4.23272-16.36849.00114-23.70174L146.89383 12.83951c4.23415-7.33433 12.0596-11.85252 20.5284-11.85252 8.46878 0 16.29423 4.51819 20.52839 11.85252l39.97037 69.23456z"/><path fill="#FFF" d="M331.6642 261.7284l-90.05432-155.95062-13.6889-23.7037-13.68888 23.7037-90.04445 155.95061c-4.23385 7.33325-4.23428 16.36808-.00113 23.70174 4.23314 7.33365 12.05689 11.85382 20.5246 11.85382h166.4c8.46946 0 16.29644-4.51525 20.532-11.84955 4.23555-7.3343 4.23606-16.37123.00132-23.706h.01976zM144.7111 273.58024L227.921 129.48148l83.19012 144.09877h-166.4z"/><path fill="#108775" d="M396.04938 285.4321c-4.23344 7.33254-12.05656 11.85185-20.52345 11.85185H311.1111c13.0912 0 23.7037-10.6125 23.7037-23.7037h40.66173L260.09877 73.74815l-18.4889 32.02963-13.68888-23.7037L239.5753 61.8963c4.23416-7.33433 12.0596-11.85252 20.5284-11.85252 8.46879 0 16.29423 4.51819 20.52839 11.85252l115.41728 199.8321c4.23426 7.33395 4.23426 16.36975 0 23.7037z"/>
-        </g>
-      </svg>
+  <div class="main-page">
+    <div class="nav-bar">
+      <div>
+        <span class="nav-bar__logo">Logo</span>
+      </div>
+      <div class="nav-bar__posts">
+        <input type="text" class="nav-bar__search" placeholder="Поиск" />
+        <div class="nav-bar__posts-icon">
+          <span>#</span>
+          <span class="nav-bar__posts-title">Посты</span>
+        </div>
+      </div>
     </div>
-    <h1 class="hero-header">Nuxt.js <span>Single Page Application</span> Boilerplate</h1>
+    <div class="posts-pagination">
+      <Posts />
+      <Pagination />
+    </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'index'
+import Pagination from "../components/Pagination.vue";
+import Posts from "../components/Posts.vue";
+
+export default {
+  name: "index",
+  components: {
+    Pagination,
+    Posts
+  },
+  created() {
+    this.$store.dispatch("fetchPosts", { self: this });
   }
+};
 </script>
 
-<style lang="scss" scoped>
-  .hero {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #212529;
+<style lang="scss">
+.nav-bar {
+  display: flex;
+  flex-direction: row;
 
-    .hero-logo {
-      svg {
-        width: 150px;
-        margin-bottom: 2rem;
+  &__logo {
+    position: absolute;
+    width: 60px;
+    height: 24px;
+    left: 90px;
+    top: 37px;
 
-        @include md {
-          width: 300px;
-        }
-      }
-    }
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
 
-    .hero-header {
-      color: white;
-      text-align: center;
-      font-size: 16px;
-
-      @include md {
-        font-size: 28px;
-      }
-
-      span {
-        color: #00C58E;
-      }
-    }
+    color: #000000;
   }
+
+  &__search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 16px 0px 8px;
+    color: gray;
+  background-image: url('https://www.stephenwadechryslerdodgejeep.com/wp-content/plugins/pm-motors-plugin/modules/vehicle_save/images/check.png');
+   background-repeat: no-repeat;
+   background-size: 20px 20px;
+    outline: 0;
+
+    position: absolute;
+    width: 309px;
+    height: 50px;
+    left: 588px;
+    top: 24px;
+
+    background: rgba(60, 60, 67, 0.1);
+    border-radius: 10px;
+  }
+
+  &__posts-icon {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+
+    position: absolute;
+    width: 76px;
+    height: 24px;
+    left: 987px;
+    top: 37px;
+  }
+  &__posts-title {
+    position: static;
+    font-family: Manrope;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 12px;
+    /* identical to box height, or 86% */
+    text-align: center;
+    letter-spacing: 0.5px;
+
+    color: #ff008a;
+
+    /* Inside Auto Layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 0px 7px;
+  }
+}
+
+.posts-pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0px;
+  width: 90wv;
+  margin-left: auto;
+  margin-right: auto;
+
+  position: absolute;
+
+  height: 1442px;
+  left: 90px;
+  top: 120px;
+}
 </style>
