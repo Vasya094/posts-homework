@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import PostInfo from "./Post.vue";
 
 export default {
@@ -26,9 +25,6 @@ export default {
     postsToShow() {
       return this.$store.state.postsToShow;
     }
-  },
-  created() {
-    this.postsToShow = this.$store.state.postsToShow;
   }
 };
 </script>

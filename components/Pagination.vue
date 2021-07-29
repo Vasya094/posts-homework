@@ -32,7 +32,7 @@ export default {
       return this.$store.state.currentPage;
     },
     pageCount() {
-      return Math.floor(this.$store.state.posts.length / 9);
+      return Math.floor(this.$store.state.filteredPosts.length / 9);
     }
   },
   methods: {
@@ -64,6 +64,10 @@ export default {
   order: 3;
   flex-grow: 0;
   margin: 40px 0px;
+
+  @media screen and (max-width: 500px) {
+    right: 17%;
+  }
 
   & .active {
     font-family: SF Pro Text;

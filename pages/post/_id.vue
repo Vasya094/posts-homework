@@ -24,7 +24,8 @@
           <textarea
             name="textarea_body"
             class="post-page__textarea"
-            v-model="pageToShow.body"
+            :value="pageToShow.body"
+            @input="updateBodyText"
           >
           </textarea>
         </div>
@@ -59,7 +60,6 @@
             Сохранить изменения
           </button>
           <button
-            value=""
             @click.stop="() => (editMode = false)"
             class="post-page__btn post-page__btn-cancel"
           >
@@ -111,7 +111,10 @@ export default {
     };
   },
   methods: {
-    saveChanges
+    saveChanges,
+    updateBodyText(e) {
+      this.$store.commit("UPDATE_BODY_TEXT", e.target.value);
+    }
   },
   computed: {
     pageToShow() {
@@ -126,6 +129,7 @@ function saveChanges(text) {
     id: this.$route.params.id
   };
   this.$store.dispatch("updatePost", reqBody);
+  this.editMode = false;
 }
 </script>
 
@@ -144,6 +148,7 @@ function saveChanges(text) {
   &__edit-button-cont {
     width: 185px;
     display: flex;
+    cursor: pointer;
     align-items: center;
     justify-content: space-between;
     font-family: Manrope;
@@ -169,6 +174,9 @@ function saveChanges(text) {
   &__img {
     width: 90vw;
     height: 139%;
+    @media screen and (max-width: 500px) {
+      height: 100%;
+    }
   }
   &__comments-cont {
     display: flex;
@@ -234,6 +242,11 @@ function saveChanges(text) {
     outline: none;
     color: aliceblue;
     background: #ff008a;
+
+    @media screen and (max-width: 500px) {
+      margin: 0px 30px 11px 49px;
+      width: 250px;
+    }
   }
   &__btn-cancel {
     background: white;
@@ -250,17 +263,9 @@ function saveChanges(text) {
     font-weight: normal;
     font-size: 18px;
     line-height: 22px;
-    /* identical to box height, or 122% */
-
     display: flex;
     align-items: center;
-
-    /* Light/Label/Secondary */
-
     color: rgba(60, 60, 67, 0.6);
-
-    /* Inside Auto Layout */
-
     flex: none;
     order: 1;
     align-self: stretch;
@@ -280,7 +285,7 @@ function saveChanges(text) {
   }
   &__textarea {
     width: 88vw;
-    height: 285px;
+    height: 275px;
     box-sizing: border-box;
     padding: 28px;
   }

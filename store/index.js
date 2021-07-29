@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const state = () => ({
   posts: [],
+  filteredPosts: [],
   postsToShow: [],
   postToPage: {},
   currentPage: 1
@@ -12,19 +13,35 @@ export const mutations = {
     state.posts = posts;
   },
   CHANGE_PAGE(state, currentPage) {
-    let allPosts = [...state.posts];
-    state.currentPage = currentPage;
-    let newPostsToShow = allPosts.slice((currentPage - 1) * 9, currentPage * 9);
+    let allPosts = [...state.filteredPosts];
+    let newPostsToShow = allPosts.slice(
+      (state.currentPage - 1) * 9,
+      state.currentPage * 9
+    );
     state.postsToShow = [...newPostsToShow];
   },
   GET_POST(state, page) {
     state.postToPage = page;
   },
-  UPDATE_POST(state, newPost) {
+  UPDATE_POST(state, { body, id }) {
+    let idNumb = Number(id);
+    let oldPost = state.filteredPosts.find(pst => pst.id === idNumb);
+    let updatedPost = { ...oldPost, body: body.body };
+    let newArrayOfPosts = state.filteredPosts.filter(pst => pst.id !== idNumb);
+    state.posts = [updatedPost, ...newArrayOfPosts];
     state.postToPage = {
       ...state.postToPage,
-      body: newPost.body
+      body: body.body
     };
+  },
+  UPDATE_BODY_TEXT(state, body) {
+    state.postToPage.body = body;
+  },
+  FILTRE_POSTS(state, text) {
+    let filteredPosts = state.posts.filter(function(pst) {
+      return pst.title.includes(text);
+    });
+    state.filteredPosts = [...filteredPosts];
   }
 };
 
@@ -34,15 +51,15 @@ export const actions = {
       "https://jsonplaceholder.typicode.com/posts?_embed=comments"
     );
     context.commit("FETCH_POSTS", result.data);
+    context.commit("FILTRE_POSTS", "");
     context.commit("CHANGE_PAGE", 1);
   },
   async updatePost(context, { body, id }) {
     var result = await axios.patch(
-      `https://jsonplaceholder.typicode.com/posts/${id}}`,
+      `https://jsonplaceholder.typicode.com/posts/${id}`,
       { body }
     );
-    debugger;
-    context.commit("UPDATE_POST", result.data);
+    context.commit("UPDATE_POST", { body: result.data, id });
   },
   changePage(context, nuberOfPage) {
     context.commit("CHANGE_PAGE", nuberOfPage);
@@ -55,5 +72,9 @@ export const actions = {
       `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
     );
     context.commit("GET_POST", { ...post.data, comments: comments.data });
+  },
+  searchPosts(context, text) {
+    context.commit("FILTRE_POSTS", text);
+    context.commit("CHANGE_PAGE", 1);
   }
 };

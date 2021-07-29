@@ -1,15 +1,18 @@
 <template>
   <div>
-    <div class="nav-bar">
+    <div class="nav-bar"  :class="inPostPage ? 'inpost-nav-bar' : ''">
+    <div class="nav-bar__back" :id="inPostPage ? 'inpost-nav-bar__back' : ''">
+    <a href="/" id="back-link">&lt; Назад</a>
+    </div>
       <div>
         <span class="nav-bar__logo">Logo</span>
       </div>
       <div class="nav-bar__posts">
         <input 
          type="text"
-         v-model="filterText"
          class="nav-bar__search"
-         @change="filterPosts"
+         @input.stop="filterPosts"
+         value=""
          placeholder="Поиск">
         </input>
         <NuxtLink to="/">
@@ -32,25 +35,67 @@ import Footer from "../components/Footer";
 
 export default {
   components: { Footer },
-  data() {
-return {
-  filterText: ''
-}
+  computed: {
+    inPostPage() {return this.$route.params.id ? true : false}
   },
   created() {
+    console.log(this.inPostPage)
     this.$store.dispatch("fetchPosts", { self: this });
   },
   methods: {
     filterPosts
   }
 };
-
-function filterPosts() {
-  this.$store.dispatch("filterPosts", this.filterText);
+function filterPosts(e) {
+  console.log(11)
+  this.$store.dispatch("searchPosts", e.target.value);
 }
 </script>
 
 <style lang="scss">
+@media screen and (max-width: 500px) {
+  .nuxt-link-active {
+    display: none;
+  }
+}
+.inpost-nav-bar {
+  margin-bottom: 20px;
+      display: flex;
+    flex-direction: row;
+    justify-content: start;
+  @media screen and (max-width: 500px) {
+    display: none;
+    .nav-bar__posts {
+      display: none;
+    }
+  }
+
+}
+@media screen and (max-width: 500px) {
+  #inpost-nav-bar__back {
+display: block !important;
+font-family: SF Pro Display;
+font-style: normal;
+font-weight: 600;
+font-size: 18px;
+line-height: 24px;
+margin-right: 12%;
+    margin-left: -3%;
+text-align: center;
+letter-spacing: 0.5px;
+color: #FF008A !important;
+flex: none;
+order: 0;
+flex-grow: 0;
+margin: 0px 10px;
+    }
+
+     .inpost-nav-bar {
+      flex-direction: row !important;
+    }
+}
+
+
 .nav-bar {
   display: flex;
   flex-direction: row;
@@ -59,6 +104,19 @@ function filterPosts() {
   align-items: center;
   margin-left: auto;
   margin-right: auto;
+
+  &__back {
+    display: none;
+  }
+
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+    align-items: baseline;
+    margin-left: 32px;
+    margin-top: 21px;
+    justify-content: end;
+    
+  }
 
     &__img-moni {
     width: 24px;
@@ -73,6 +131,21 @@ function filterPosts() {
     font-size: 20px;
     line-height: 24px;
     color: #000000;
+     @media screen and (max-width: 500px) {
+        font-family: sans-serif;
+font-style: normal;
+font-weight: bold;
+font-size: 32px;
+line-height: 36px;
+margin-top: 20px;
+display: flex;
+align-items: center;
+color: #000000;
+flex: none;
+order: 0;
+flex-grow: 1;
+margin: 0px 10px
+     }
   }
 
   &__posts {
@@ -82,6 +155,10 @@ function filterPosts() {
     padding-right: 30px;
     align-items: inherit;
     justify-content: space-between;
+
+    @media screen and (max-width: 500px) {
+      height: 25px;
+    }
   }
 
   &__search {
@@ -107,6 +184,14 @@ function filterPosts() {
     padding-right: 0px;
     width: 76px;
     height: 24px;
+    padding-right: 0px;
+    margin-top: 9px;
+    width: 91px;
+    height: 24px;
+    &:hover {
+    transform: scale3d(1.5, 1.5, 1.5);
+      }
+
   }
   &__posts-title {
     font-family: Manrope;
@@ -122,5 +207,10 @@ function filterPosts() {
     flex-grow: 0;
     margin: 0px 7px;
   }
+}
+#back-link {
+  color: #ff008a;
+  text-decoration: none;
+cursor: pointer;
 }
 </style>

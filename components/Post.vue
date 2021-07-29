@@ -8,7 +8,7 @@
       />
     </div>
     <div class="one-post__text-cont">
-      <p class="one-post__title">{{ post.title.substring(0, 20) }}</p>
+      <p class="one-post__title">{{ post.title }}</p>
       <p class="one-post__body">{{ post.body }}</p>
     </div>
     <div class="one-post__post-footer">
